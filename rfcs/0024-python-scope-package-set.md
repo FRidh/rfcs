@@ -34,7 +34,7 @@ what to include or exclude from the package set.
 The Nix Packages collection (Nixpkgs) consists of a large amount of expressions
 of which a significant portion corresponds to package sets. Major package sets
 at the time of writing exist e.g. for the Haskell, Perl and Python languages.
-The scope and way working with these package sets depends on multiple factors,
+The scope and way of working with these package sets depends on multiple factors,
 such as the tools provided upstream, the demand from the community and the
 maintainers of the package sets and the individual expressions. Another
 important factor is whether *upstream* provides a curated set of packages that
@@ -54,7 +54,8 @@ The following definitions are used in the scope of this RFC:
 Examples on the usage of application and library:
 - `scipy` is a collection of routines for scientific computing. It is used for development purposes or as a library and is therefore considered a *library*
 - `calibre` is a program for managing e-books that happens to be written in Python. The package is therefore considered an *application*
-- `pytest` is a test runner. While a program, it can only be used in conjunction with the Python environment where it needs to import the modules that are to be tested. It is therefore considered a *library*
+- `pytest` is a test runner. While providing an executable, it can only be used in conjunction with the Python environment where it needs to import the modules that are to be tested. It is therefore considered a *library*
+- `ansible` is a program for provisioning. The executable is typically used, however, some third-party Python libraries import the (non-public) `ansible` API. For practical reasons it is thus consider both an *application* and a *library*.
 
 ## Scope of the package set
 
@@ -80,7 +81,7 @@ In certain cases a package is used as both an application and a library. The
 predominant use case determines whether the expression is considered an
 application or a library. If both use cases are considered common, then the
 expression shall be part of the package set as a library, and a special alias
-shall we added to the top-level attribute set. This alias shall apply a function
+shall be added to the top-level attribute set. This alias shall apply a function
 to the library that performs additional steps to convert it from library to
 application, clearly marking it as an application. This function shall be
 documented in the Nixpkgs manual.
@@ -89,18 +90,18 @@ documented in the Nixpkgs manual.
 A special case to consider are application-specific dependencies. These are
 dependencies that have been factored out into separate packages but are only
 intended to be used by the parent application. Examples of such packages are
-`buildbot` plugins or the `sabyenc` module for `sabnzbd`. As such packages are
+`home-manager` plugins or the `sabyenc` module for `sabnzbd`. As such packages are
 of no use in a development environment, they should be bundled with the
 expression of the parent application.
 
 ## Contributing and maintaining expressions
 
 Maintenance of the expressions takes effort. All expressions shall therefore
-have a maintainer. Packages that have no maintainer may be removed from the
-package set or marked as broken in case they seem to be unused, untouched in an
-extended period of time, or in whatever way cause additional work for other
-maintainers or package set maintainers. Guidelines for contributing expressions
-to the package set shall be made available in the Nixpkgs manual.
+have a maintainer. Packages that have no maintainer may be removed or marked as
+broken as soon as they seem to be unused, untouched in an extended period of
+time, require any additional maintenance effort, or when there are any
+indications of dangerous bugs or vulnerabilities. Guidelines for contributing
+expressions to the package set shall be made available in the Nixpkgs manual.
 
 # Drawbacks
 [drawbacks]: #drawbacks
@@ -117,10 +118,10 @@ such as `pypi2nix` could be used. Using an expression generator could reduce the
 amount of work needed for writing and updating expressions. The `pypi2nix` tool
 uses `pip` to resolve dependencies.
 
-This is not recommended because:
-- non-Python dependencies are not specified upstream
-- excessive pinning of dependencies can lead to an unsatisfiable set
-- curated sets need to be generated for multiple combinations of platforms,
+This is at the time of writing not recommended because:
+1. non-Python dependencies are not specified upstream
+2. excessive pinning of dependencies can lead to an unsatisfiable set
+3. curated sets need to be generated for multiple combinations of platforms,
 interpreter versions and implementations. That requires being able to check out
 the upstream database (PyPI) at a certain state. While technically possible, no
 solutions are yet available.
@@ -131,9 +132,9 @@ The scope of the package set could be limited to only providing dependencies for
 *applications*. Developers could use 3rd-party expression generators like
 `pypi2nix` to create expressions for development purposes. This is not
 recommended because:
-- applications can vary significantly in their dependencies, requiring different
+1. applications can vary significantly in their dependencies, requiring different
 versions of packages, negating the use of a shared package set
-- of the reasons against using expression generators.
+2. of the reasons against using expression generators.
 
 
 # Unresolved questions
