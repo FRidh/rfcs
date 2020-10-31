@@ -1,0 +1,96 @@
+---
+feature: nixos-release-schedule
+start-date: 2020-10-31
+author: Frederik Rietdijk (@FRidh)
+co-authors: 
+related-issues:
+---
+
+# Summary
+[summary]: #summary
+
+NixOS is released twice a year. For each release, there is a branch-off
+and a stabilization period. The schedule in this RFC further defines
+when changes can be made in core parts such as the `stdenv` and `systemd`
+with the intend of avoiding last-minute breaking changes that would
+hinder the stabilization period and delay the release of NixOS.
+
+# Motivation
+[motivation]: #motivation
+
+NixOS is a large project consisting of many components that need to function
+together. Prior to several releases there have been blocking issues due to core
+changes or other important failures. Clearly, changes need to be tested better,
+however, with core changes that is not trivial due to computational resources
+and the impact they can have througout. Hence, more time is needed to stabilize
+core changes compared to other changes.
+
+Additionally, by changing our release dates to follow those of certain upstream
+projects we could reduce the amount of issues we encounter during stabilization.
+
+# Detailed design
+[design]: #detailed-design
+
+NixOS is to be released twice a year, in May and November. A release is
+supported until one month after the release of a new version. If a release is
+delayed, the current version will still be supported until one month after the
+release of the upcoming version.
+
+The following table shows the release schedule for a stable NixOS release.
+
+| Month | What                             |
+|-------|----------------------------------|
+|    -2 | `master` closed for core changes |
+|    -1 | Branch-off                       |
+|     0 | Release                          |
+|    +1 | Support of old-stable stops      |
+|    +1 | `master` open for core changes   |
+
+The release months is denoted months 0. A month before release is branch-off.
+Two months before release is the deadline for core changes. A month after
+release the support of old-stable stops, and from this point on `master` is also
+open again for core changes.
+
+NixOS release managers will announce the items on the release schedule in a
+timely manner on the mailing list (Discourse).
+
+## Core changes
+
+The `master` branch is closed for core changes during a three-month period, for
+the following reasons:
+1. a long stabilization period is needed before release;
+2. after branch-off until approximately the first month after release the 
+  project cannot handle core changes, both in terms of compute resources as well
+  as human resources.
+
+What are then core changes?
+
+TODO
+
+# Drawbacks
+[drawbacks]: #drawbacks
+
+The development of NixOS depends on volunteers. Restricting the time they can
+commit certain changes may limit the contributions they make.
+
+Changing release date may be better when considering certain projects, but
+worse in case of others. Additionally, upstream projects may choose to change
+their release schedule, as we do here.
+
+# Alternatives
+[alternatives]: #alternatives
+
+## Maintain the status quo regarding release dates
+
+We could keep the release dates in March and September.
+
+## Maintain the status quo regarding release schedule
+
+Currently there is no release schedule. We do manage to get releases out,
+despite certain issues.
+
+# Future work
+[future]: #future-work
+
+- Document the release schedule in the NixOS manual.
+- Announce the various deadlines on the mailing list (Discourse).
